@@ -57,6 +57,7 @@ CREATE TABLE `BOOKING` (
   `checkin` date NOT NULL,
   PRIMARY KEY (`bookingID`),
   KEY `customerID` (`customerID`),
+  CONSTRAINT `BOOKING_ibfk_1` FOREIGN KEY (`customerID`) REFERENCES `CUSTOMER` (`customerID`),
   CONSTRAINT `BOOKING_chk_1` CHECK ((`num_rooms` > 0)),
   CONSTRAINT `BOOKING_chk_2` CHECK ((`num_adults` > 0)),
   CONSTRAINT `chkdate` CHECK ((`checkout` > `checkin`))
