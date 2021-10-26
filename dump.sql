@@ -15,28 +15,6 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
---
--- Table structure for table `AGECONVERSION`
---
-
-DROP TABLE IF EXISTS `AGECONVERSION`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `AGECONVERSION` (
-  `dob` date NOT NULL,
-  `age` int DEFAULT NULL,
-  PRIMARY KEY (`dob`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `AGECONVERSION`
---
-
-LOCK TABLES `AGECONVERSION` WRITE;
-/*!40000 ALTER TABLE `AGECONVERSION` DISABLE KEYS */;
-/*!40000 ALTER TABLE `AGECONVERSION` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `BOOKING`
@@ -107,31 +85,6 @@ LOCK TABLES `CAB` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `CITYTOSTATE`
---
-
-DROP TABLE IF EXISTS `CITYTOSTATE`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `CITYTOSTATE` (
-  `city` varchar(20) NOT NULL,
-  `state` varchar(20) NOT NULL,
-  PRIMARY KEY (`city`),
-  KEY `state` (`state`),
-  CONSTRAINT `CITYTOSTATE_ibfk_1` FOREIGN KEY (`state`) REFERENCES `STATETOCOUNTRY` (`state`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `CITYTOSTATE`
---
-
-LOCK TABLES `CITYTOSTATE` WRITE;
-/*!40000 ALTER TABLE `CITYTOSTATE` DISABLE KEYS */;
-/*!40000 ALTER TABLE `CITYTOSTATE` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `CUSTOMER`
 --
 
@@ -143,20 +96,17 @@ CREATE TABLE `CUSTOMER` (
   `aadharID` varchar(16) NOT NULL,
   `customerName` varchar(50) NOT NULL,
   `email` varchar(20) DEFAULT NULL,
-  `houseNo` int DEFAULT NULL,
-  `streetAddress` varchar(15) NOT NULL,
+  `address` varchar(30) NOT NULL,
+  `city` varchar(20) NOT NULL,
+  `state` varchar(20) NOT NULL,
+  `country` varchar(20) NOT NULL,
   `dob` date NOT NULL,
   `gender` varchar(1) NOT NULL,
   `phoneNo` varchar(10) NOT NULL,
   PRIMARY KEY (`customerID`),
   UNIQUE KEY `aadharID` (`aadharID`),
-  KEY `dob` (`dob`),
-  KEY `streetAddress` (`streetAddress`),
-  CONSTRAINT `CUSTOMER_ibfk_1` FOREIGN KEY (`dob`) REFERENCES `AGECONVERSION` (`dob`),
-  CONSTRAINT `CUSTOMER_ibfk_2` FOREIGN KEY (`streetAddress`) REFERENCES `STREETTOPINCODE` (`streetAddress`),
   CONSTRAINT `check_aadhar` CHECK (regexp_like(`aadharID`,_utf8mb4'^[0-9]{16}$')),
   CONSTRAINT `check_gender_cust` CHECK ((`gender` in (_utf8mb4'M',_utf8mb4'F',_utf8mb4'O'))),
-  CONSTRAINT `check_houseNo_customer` CHECK ((`houseNo` > 0)),
   CONSTRAINT `check_num_cust` CHECK (regexp_like(`phoneNo`,_utf8mb4'^[0-9]{10}$'))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -179,7 +129,7 @@ DROP TABLE IF EXISTS `DEPARTMENT`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `DEPARTMENT` (
   `departmentCode` int NOT NULL,
-  `managerID` int NOT NULL,
+  `managerID` int,
   `departmentName` varchar(15) NOT NULL,
   PRIMARY KEY (`departmentCode`),
   UNIQUE KEY `departmentName` (`departmentName`),
@@ -194,8 +144,53 @@ CREATE TABLE `DEPARTMENT` (
 
 LOCK TABLES `DEPARTMENT` WRITE;
 /*!40000 ALTER TABLE `DEPARTMENT` DISABLE KEYS */;
+INSERT INTO `DEPARTMENT` VALUES (1,NULL,'Reception'), (2,1,'Travel Desk'), (3,2,'Restaurant'), (4,NULL,'Housekeeping'),(5,NULL,'Security'),
 /*!40000 ALTER TABLE `DEPARTMENT` ENABLE KEYS */;
 UNLOCK TABLES;
+
+
+--
+-- Table structure for table `EMPLOYEE`
+--
+
+DROP TABLE IF EXISTS `EMPLOYEE`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `EMPLOYEE` (
+  `employeeID` int NOT NULL,
+  `email` varchar(30) DEFAULT NULL,
+  `address` varchar(30) NOT NULL,
+  `city` varchar(20) NOT NULL,
+  `state` varchar(20) NOT NULL,
+  `country` varchar(20) NOT NULL,
+  `dob` date NOT NULL,
+  `gender` varchar(1) NOT NULL,
+  `phoneNo` varchar(10) NOT NULL,
+  `salary` int NOT NULL,
+  `deptcode` int NOT NULL,
+  `superID` int DEFAULT NULL,
+  PRIMARY KEY (`employeeID`),
+  KEY `deptcode` (`deptcode`),
+  KEY `superID` (`superID`),
+  CONSTRAINT `EMPLOYEE_ibfk_1` FOREIGN KEY (`deptcode`) REFERENCES `DEPARTMENT` (`departmentCode`),
+  CONSTRAINT `EMPLOYEE_ibfk_2` FOREIGN KEY (`superID`) REFERENCES `EMPLOYEE` (`employeeID`),
+  CONSTRAINT `check_gender` CHECK ((`gender` in (_utf8mb4'M',_utf8mb4'F',_utf8mb4'O'))),
+  CONSTRAINT `check_num` CHECK (regexp_like(`phoneNo`,_utf8mb4'^[0-9]{10}$')),
+  CONSTRAINT `check_salary` CHECK ((`salary` > 0))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `EMPLOYEE`
+--
+
+LOCK TABLES `EMPLOYEE` WRITE;
+/*!40000 ALTER TABLE `EMPLOYEE` DISABLE KEYS */;
+INSERT INTO `EMPLOYEE` VALUES (1,'abc@gmail.com','home sweet home','hyderabad','telangana','india','2001-12-01','F','1234567890',3213,2,NULL),(2,'abc@gmail.com','iiit','mumbai','maharashtra','india','2001-09-01','M','9934567890',4213,3,NULL),(3,'abdedc@gmail.com','blahblahblha','patna','bihar','india','1998-03-01','F','8834567890',65463,2,1);
+/*!40000 ALTER TABLE `EMPLOYEE` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
 
 --
 -- Table structure for table `DEPENDENT`
@@ -211,9 +206,7 @@ CREATE TABLE `DEPENDENT` (
   `employeeID` int NOT NULL,
   PRIMARY KEY (`name`),
   KEY `employeeID` (`employeeID`),
-  KEY `dob` (`dob`),
   CONSTRAINT `DEPENDENT_ibfk_1` FOREIGN KEY (`employeeID`) REFERENCES `EMPLOYEE` (`employeeID`),
-  CONSTRAINT `DEPENDENT_ibfk_2` FOREIGN KEY (`dob`) REFERENCES `AGECONVERSION` (`dob`),
   CONSTRAINT `check_num_dep` CHECK (regexp_like(`phoneNo`,_utf8mb4'^[0-9]{10}$'))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -224,51 +217,12 @@ CREATE TABLE `DEPENDENT` (
 
 LOCK TABLES `DEPENDENT` WRITE;
 /*!40000 ALTER TABLE `DEPENDENT` DISABLE KEYS */;
+INSERT INTO `DEPENDENT` VALUES ('Harshit', '2001-03-23','9876543210',1), ('Eshika','2001-12-04','5643173826',2),('Adith John Rajeev', '1998-02-01','9871324536',3);
 /*!40000 ALTER TABLE `DEPENDENT` ENABLE KEYS */;
 UNLOCK TABLES;
 
---
--- Table structure for table `EMPLOYEE`
---
 
-DROP TABLE IF EXISTS `EMPLOYEE`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `EMPLOYEE` (
-  `employeeID` int NOT NULL AUTO_INCREMENT,
-  `email` varchar(30) DEFAULT NULL,
-  `houseNo` int DEFAULT NULL,
-  `streetAddress` varchar(15) NOT NULL,
-  `dob` date NOT NULL,
-  `gender` varchar(1) NOT NULL,
-  `phoneNo` varchar(10) NOT NULL,
-  `salary` int NOT NULL,
-  `deptcode` int NOT NULL,
-  `superID` int DEFAULT NULL,
-  PRIMARY KEY (`employeeID`),
-  KEY `deptcode` (`deptcode`),
-  KEY `superID` (`superID`),
-  KEY `dob` (`dob`),
-  KEY `streetAddress` (`streetAddress`),
-  CONSTRAINT `EMPLOYEE_ibfk_1` FOREIGN KEY (`deptcode`) REFERENCES `DEPARTMENT` (`departmentCode`),
-  CONSTRAINT `EMPLOYEE_ibfk_2` FOREIGN KEY (`superID`) REFERENCES `EMPLOYEE` (`employeeID`),
-  CONSTRAINT `EMPLOYEE_ibfk_3` FOREIGN KEY (`dob`) REFERENCES `AGECONVERSION` (`dob`),
-  CONSTRAINT `EMPLOYEE_ibfk_4` FOREIGN KEY (`streetAddress`) REFERENCES `STREETTOPINCODE` (`streetAddress`),
-  CONSTRAINT `check_gender` CHECK ((`gender` in (_utf8mb4'M',_utf8mb4'F',_utf8mb4'O'))),
-  CONSTRAINT `check_houseNo` CHECK ((`houseNo` > 0)),
-  CONSTRAINT `check_num` CHECK (regexp_like(`phoneNo`,_utf8mb4'^[0-9]{10}$')),
-  CONSTRAINT `check_salary` CHECK ((`salary` > 0))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `EMPLOYEE`
---
-
-LOCK TABLES `EMPLOYEE` WRITE;
-/*!40000 ALTER TABLE `EMPLOYEE` DISABLE KEYS */;
-/*!40000 ALTER TABLE `EMPLOYEE` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `NUMOFNIGHTS`
@@ -281,8 +235,7 @@ CREATE TABLE `NUMOFNIGHTS` (
   `checkin` date NOT NULL,
   `checkout` date NOT NULL,
   `numofnights` int DEFAULT NULL,
-  `bookingID` int NOT NULL,
-  PRIMARY KEY (`checkin`,`checkout`),
+  `bookingID` int PRIMARY KEY NOT NULL,
   KEY `bookingID` (`bookingID`),
   CONSTRAINT `NUMOFNIGHTS_ibfk_1` FOREIGN KEY (`bookingID`) REFERENCES `BOOKING` (`bookingID`),
   CONSTRAINT `NUMOFNIGHTS_chk_1` CHECK ((`numofnights` > 0))
@@ -326,31 +279,6 @@ LOCK TABLES `PAYMENT` WRITE;
 /*!40000 ALTER TABLE `PAYMENT` ENABLE KEYS */;
 UNLOCK TABLES;
 
---
--- Table structure for table `PINCODETOCITY`
---
-
-DROP TABLE IF EXISTS `PINCODETOCITY`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `PINCODETOCITY` (
-  `city` varchar(20) NOT NULL,
-  `pincode` varchar(6) NOT NULL,
-  PRIMARY KEY (`pincode`),
-  KEY `city` (`city`),
-  CONSTRAINT `PINCODETOCITY_ibfk_1` FOREIGN KEY (`city`) REFERENCES `CITYTOSTATE` (`city`),
-  CONSTRAINT `PINCODETOCITY_chk_1` CHECK (regexp_like(`pincode`,_utf8mb4'^[0-9]{6}$'))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `PINCODETOCITY`
---
-
-LOCK TABLES `PINCODETOCITY` WRITE;
-/*!40000 ALTER TABLE `PINCODETOCITY` DISABLE KEYS */;
-/*!40000 ALTER TABLE `PINCODETOCITY` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `RECSERVICE`
@@ -404,34 +332,6 @@ LOCK TABLES `RESTAURANT` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `ROOM`
---
-
-DROP TABLE IF EXISTS `ROOM`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `ROOM` (
-  `roomNo` int NOT NULL,
-  `roomType` varchar(10) NOT NULL,
-  `bookingID` int NOT NULL,
-  PRIMARY KEY (`roomNo`),
-  KEY `bookingID` (`bookingID`),
-  KEY `roomType` (`roomType`),
-  CONSTRAINT `ROOM_ibfk_1` FOREIGN KEY (`bookingID`) REFERENCES `BOOKING` (`bookingID`),
-  CONSTRAINT `ROOM_ibfk_2` FOREIGN KEY (`roomType`) REFERENCES `ROOMCLASS` (`roomType`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `ROOM`
---
-
-LOCK TABLES `ROOM` WRITE;
-/*!40000 ALTER TABLE `ROOM` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ROOM` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `ROOMCLASS`
 --
 
@@ -453,8 +353,40 @@ CREATE TABLE `ROOMCLASS` (
 
 LOCK TABLES `ROOMCLASS` WRITE;
 /*!40000 ALTER TABLE `ROOMCLASS` DISABLE KEYS */;
+INSERT INTO `ROOMCLASS` VALUES ('standard',434,'good'),('deluxe',690,'better').('suite',6969,'best');
 /*!40000 ALTER TABLE `ROOMCLASS` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `ROOM`
+--
+
+DROP TABLE IF EXISTS `ROOM`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `ROOM` (
+  `roomNo` int NOT NULL,
+  `roomType` varchar(10) NOT NULL,
+  `bookingID` int,
+  PRIMARY KEY (`roomNo`),
+  KEY `bookingID` (`bookingID`),
+  KEY `roomType` (`roomType`),
+  CONSTRAINT `ROOM_ibfk_1` FOREIGN KEY (`bookingID`) REFERENCES `BOOKING` (`bookingID`),
+  CONSTRAINT `ROOM_ibfk_2` FOREIGN KEY (`roomType`) REFERENCES `ROOMCLASS` (`roomType`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ROOM`
+--
+
+LOCK TABLES `ROOM` WRITE;
+/*!40000 ALTER TABLE `ROOM` DISABLE KEYS */;
+INSERT INTO `ROOMCLASS` VALUES (1,'standard',NULL),(2,'standard',NULL),(3,'standard',NULL),(4,'standard',NULL),(5,'deluxe',NULL),(6,'deluxe',NULL),(7,'deluxe',NULL),(8,'deluxe',NULL),(9,'suite',NULL),(10,'suite',NULL),(11,'suite',NULL),(12,'suite',NULL);
+/*!40000 ALTER TABLE `ROOM` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
 
 --
 -- Table structure for table `SERVICE`
@@ -483,52 +415,7 @@ LOCK TABLES `SERVICE` WRITE;
 /*!40000 ALTER TABLE `SERVICE` ENABLE KEYS */;
 UNLOCK TABLES;
 
---
--- Table structure for table `STATETOCOUNTRY`
---
 
-DROP TABLE IF EXISTS `STATETOCOUNTRY`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `STATETOCOUNTRY` (
-  `country` varchar(20) NOT NULL,
-  `state` varchar(20) NOT NULL,
-  PRIMARY KEY (`state`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `STATETOCOUNTRY`
---
-
-LOCK TABLES `STATETOCOUNTRY` WRITE;
-/*!40000 ALTER TABLE `STATETOCOUNTRY` DISABLE KEYS */;
-/*!40000 ALTER TABLE `STATETOCOUNTRY` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `STREETTOPINCODE`
---
-
-DROP TABLE IF EXISTS `STREETTOPINCODE`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `STREETTOPINCODE` (
-  `streetAddress` varchar(50) NOT NULL,
-  `pincode` varchar(6) NOT NULL,
-  PRIMARY KEY (`streetAddress`),
-  CONSTRAINT `STREETTOPINCODE_chk_1` CHECK (regexp_like(`pincode`,_utf8mb4'^[0-9]{6}$'))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `STREETTOPINCODE`
---
-
-LOCK TABLES `STREETTOPINCODE` WRITE;
-/*!40000 ALTER TABLE `STREETTOPINCODE` DISABLE KEYS */;
-/*!40000 ALTER TABLE `STREETTOPINCODE` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
