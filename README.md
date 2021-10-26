@@ -16,7 +16,7 @@ The mini-world is a Hotel Management System where we implement a database to eff
 ## Functionalities Provided
 After logging in, the following funcitonalities would be provided to the user:
 
-![img](https://user-images.githubusercontent.com/71181616/138891426-be984c59-57c1-43c5-bc6a-6dc3647ddad1.png)
+![img](https://media.discordapp.net/attachments/825048469872836638/902605891839336569/Screenshot_from_2021-10-26_22-42-08.png)
 
 ### Description of each function:
 1. Add details of a new customer
