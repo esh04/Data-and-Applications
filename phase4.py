@@ -1,38 +1,7 @@
 import subprocess as sp
 import pymysql
 import pymysql.cursors
-import time
 from datetime import date, timedelta
-
-#--------------------LOGGING INTO THE DB
-def login():
-	tmp = sp.call('clear', shell=True)
-	print("LOG IN TO THE SQL SERVER");
-	global con
-	username = input("Username: ")
-	password = input("Password: ")
-	try:
-		con = pymysql.connect(host='localhost',
-	                              user=username,
-	                              password=password,
-	                              db='RealEstate',
-	                              cursorclass=pymysql.cursors.DictCursor)
-		global cur
-		cur = con.cursor()
-	except:
-		print()
-		print("Failed,Please TRY AGAIN!")
-		input("Press Enter to continue")
-		login()
-
-#------------CUSTOMARY OUTPUT
-def main_output():
-	tmp = sp.call('clear', shell=True);
-	print("\t\t------------------------------------------------------------------------------------")
-	print("\t\t                             WELCOME TO THE HOTEL DB                             ")
-	print("\t\t------------------------------------------------------------------------------------")
-	print();print();
-
 
 '''
     new booking
@@ -44,7 +13,8 @@ def main_output():
     new dependant
     
 '''
-#--------TASKS
+
+
 
 def newEmployee():
     
@@ -52,7 +22,7 @@ def newEmployee():
         row = {}
         print("Enter new employee's details: ")
         ID = int(input("Enter Employee ID"))
-        name = (input("Enter Name"))
+        #name = (input("Enter Name"))
         email = input("Enter Email")
         h_no= int(input("Enter House Number"))
         street = input("Enter Street Name")
@@ -66,8 +36,8 @@ def newEmployee():
         birth_date = date( int(dob[:4],int(dob[5:7]),int(dob[8:])))
         
         age = (date.today() - birth_date) // timedelta(days=365.2425)
-        query = "INSERT INTO EMPLOYEE VALUES('%d', '%s', '%s', '%d', '%s', '%s', '%c', %s, %d, %d, %d)" % (
-            ID, name, email, h_no, street, dob, gender, phone, salary, dpt_code, superid)
+        query = "INSERT INTO EMPLOYEE VALUES('%d', '%s', '%d', '%s', '%s', '%c', '%s', '%d', '%d', '%d');" % (
+            ID,email, h_no, street, dob, gender, phone, salary, dpt_code, superid)
 
         
         print(query)
@@ -195,6 +165,32 @@ def newDependent():
 
     return
 
+def newCustomer():
+    try:
+        print("Enter new customer's details: ")
+        ID = int(input("Enter Customer ID "))
+        aadhar = str(input("Enter Cutomer Aadhar Number "))
+        name = input("Enter Name")
+        email = input("Enter Email")
+        h_no= int(input("Enter House Number"))
+        street = input("Enter Street Name")
+        dob = str(input("Enter DOB (YYYY-MM-DD) "))
+        phone = str(input("Enter Number"))
+
+        query = "INSERT INTO EMPLOYEE VALUES('%d','%s','%s','%s','%d','%s','%s','%s');" % (
+            ID, aadhar, name, email, h_no, street, dob, phone,)
+
+        
+        print(query)
+        cur.execute(query)
+        con.commit()
+    except Exception as e:
+        con.rollback()
+        print("Failed to insert into database")
+        print(">>>>>>>>>>>>>", e)
+
+    return
+
 def dispatch(ch):
     """
     Function that maps helper functions to option entered
@@ -208,7 +204,7 @@ def dispatch(ch):
         newEmployee()
     elif(ch == 4):
         deleteEmployee()
-    elif (ch==5):
+    elif (Che==5):
         newDependent()
     else:
         print("Error: Invalid Option")
