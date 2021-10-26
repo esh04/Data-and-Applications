@@ -1,6 +1,7 @@
 # Data-and-Applications
 The mini-world is a Hotel Management System where we implement a database to efficiently record and manage the different crucial aspects required to successfully run a hotel. We record bookings, their payment statuses and the party who was responsible for the booking with their credentials. We store information regarding the type of room which was booked and the employees who are responsible for maintaining the standards of the room and organization of the hotel. The recording is also made of the different types of services offered by the hotel to its customers. For effective workforce management, we store all employees including their dependents. 
 
+Link to the demo: https://iiitaphyd-my.sharepoint.com/:v:/g/personal/adith_r_research_iiit_ac_in/ESdgn9ussxhEsuv6riHUsFIBq5UM1WE1SeoJC-0bt11Xrg?e=XvnwGa
 
 ## Requirements
 - PyMySql python module
