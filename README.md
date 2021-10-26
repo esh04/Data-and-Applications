@@ -32,5 +32,5 @@ After logging in, the following funcitonalities would be provided to the user:
 11. Update the details of any dependent of an existing employees
 12. Display all the employees that are working under a specific department
 13. Update the manager of a department
-14. 
+14. Services
 15. Logout from the server
