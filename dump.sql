@@ -382,7 +382,7 @@ CREATE TABLE `ROOM` (
 
 LOCK TABLES `ROOM` WRITE;
 /*!40000 ALTER TABLE `ROOM` DISABLE KEYS */;
-INSERT INTO `ROOMCLASS` VALUES (1,'standard',NULL),(2,'standard',NULL),(3,'standard',NULL),(4,'standard',NULL),(5,'deluxe',NULL),(6,'deluxe',NULL),(7,'deluxe',NULL),(8,'deluxe',NULL),(9,'suite',NULL),(10,'suite',NULL),(11,'suite',NULL),(12,'suite',NULL);
+INSERT INTO `ROOM` VALUES (1,'standard',NULL),(2,'standard',NULL),(3,'standard',NULL),(4,'standard',NULL),(5,'deluxe',NULL),(6,'deluxe',NULL),(7,'deluxe',NULL),(8,'deluxe',NULL),(9,'suite',NULL),(10,'suite',NULL),(11,'suite',NULL),(12,'suite',NULL);
 /*!40000 ALTER TABLE `ROOM` ENABLE KEYS */;
 UNLOCK TABLES;
 
