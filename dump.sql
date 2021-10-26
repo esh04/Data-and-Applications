@@ -144,7 +144,7 @@ CREATE TABLE `DEPARTMENT` (
 
 LOCK TABLES `DEPARTMENT` WRITE;
 /*!40000 ALTER TABLE `DEPARTMENT` DISABLE KEYS */;
-INSERT INTO `DEPARTMENT` VALUES (1,NULL,'Reception'), (2,1,'Travel Desk'), (3,2,'Restaurant'), (4,NULL,'Housekeeping'),(5,NULL,'Security'),
+INSERT INTO `DEPARTMENT` VALUES (1,NULL,'Reception'), (2,1,'Travel Desk'), (3,2,'Restaurant'), (4,NULL,'Housekeeping'),(5,NULL,'Security');
 /*!40000 ALTER TABLE `DEPARTMENT` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -353,7 +353,7 @@ CREATE TABLE `ROOMCLASS` (
 
 LOCK TABLES `ROOMCLASS` WRITE;
 /*!40000 ALTER TABLE `ROOMCLASS` DISABLE KEYS */;
-INSERT INTO `ROOMCLASS` VALUES ('standard',434,'good'),('deluxe',690,'better').('suite',6969,'best');
+INSERT INTO `ROOMCLASS` VALUES ('standard',434,'good'),('deluxe',690,'better'),('suite',6969,'best');
 /*!40000 ALTER TABLE `ROOMCLASS` ENABLE KEYS */;
 UNLOCK TABLES;
 
